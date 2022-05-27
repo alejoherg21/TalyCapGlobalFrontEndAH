@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <ol class="list-group list-group-numbered">
+  <li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">Tabla Autores</div>
+      <label [ngClass]="(authorsState=='Pendiente')? 'text-danger':'text-success'">{{ authorsState }}</label>
+    </div>
+    <span class="badge">
+      <div *ngIf="authorsState=='Proceso'" class="spinner-border spinner-border-sm text-success" role="status"></div>
+    </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">Tabla Libros</div>
+      <label [ngClass]="(booksState=='Pendiente')? 'text-danger':'text-success'">{{ booksState }}</label>
+    </div>
+    <span class="badge">
+      <div *ngIf="booksState=='Proceso'" class="spinner-border spinner-border-sm text-success" role="status"></div>
+    </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">Tabla Usuarios</div>
+      <label [ngClass]="(usersState=='Pendiente')? 'text-danger':'text-success'">{{ usersState }}</label>
+    </div>
+    <span class="badge">
+      <div *ngIf="usersState=='Proceso'" class="spinner-border spinner-border-sm text-success" role="status"></div>
+    </span>
+  </li>
+</ol>
+</div>
+<section class="vh-100 bg-light mt-4 text-center">
+    <div class="row justify-content-md-center">
+      <div class="col-md-6">
+        <button type="submit" class="btn btn-primary btn-lg" (click)="UpdateAuthors()">Actualizar Tablas</button>
+      </div>
+    </div>
+</section>
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Actualización Exitosa</h4>
+      </div>
+      <div class="modal-body">
+        <p>Las tablas se han actualizado correctamente en la base de datos</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"
+                (click)="closePopup()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
