@@ -142,8 +142,6 @@ export class AuthorsComponent implements AfterViewInit, OnDestroy, OnInit {
       //inicializa el data table
       this.boolFilterResponse=data;
       this.rerender()
-
-      //this.dtTrigger.next();
     })
   }
 
