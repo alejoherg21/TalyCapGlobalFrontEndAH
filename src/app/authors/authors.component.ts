@@ -1,4 +1,4 @@
-import { Component, Injectable, OnInit, TemplateRef, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Injectable, OnInit, OnDestroy,ViewChild   } from '@angular/core';
 import { AuthorsService } from '../Services/AuthorsService';
 import { NgbDatepicker, NgbDatepickerKeyboardService, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,6 +6,7 @@ import { BookFilter } from '../Models/BookFilter';
 import { BoolFilterResponse } from '../Models/BoolFilterResponse';
 import { AuthorsResponse } from '../Models/AuthorsList';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 const Key = {
   PageUp: 'PageUp',
@@ -45,18 +46,20 @@ export class CustomKeyboardService extends NgbDatepickerKeyboardService {
   styleUrls: ['./authors.component.css']
 })
 
-export class AuthorsComponent implements OnInit {
+export class AuthorsComponent implements AfterViewInit, OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
+  dtOptions: any = {};
+
+  dtTrigger = new Subject<any>();
+
   authorsResponse: AuthorsResponse[]
   form: FormGroup;
   bookFilter: BookFilter
   boolFilterResponse: BoolFilterResponse[]
 
-  mostrar: boolean=false
-
-  dtOptions: any = {};
-  dtTrigger = new Subject<any>();
   data: any;
-  displayStyle = "none";
+  display = true;
 
   model1: NgbDateStruct;
   model2: NgbDateStruct;
@@ -82,12 +85,27 @@ export class AuthorsComponent implements OnInit {
         'excel'
       ]
     };
+    this.display = true;
+
   }
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
 
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      this.display = true;
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next();
+    });
+  }
 
   GetAuthors (){
     this.Api.GetAuthors().subscribe ((data: AuthorsResponse[]) =>{
@@ -119,12 +137,13 @@ export class AuthorsComponent implements OnInit {
 
     this.Api.GetBookFilter(this.bookFilter).subscribe ((data:BoolFilterResponse[]) =>{
       console.log(data)
-      this.mostrar=true
+      this.display = true;
 
       //inicializa el data table
       this.boolFilterResponse=data;
-      this.dtTrigger.next();
-      this.displayStyle = "block";
+      this.rerender()
+
+      //this.dtTrigger.next();
     })
   }
 

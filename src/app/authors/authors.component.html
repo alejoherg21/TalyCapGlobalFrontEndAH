@@ -44,8 +44,7 @@
 </div>
 
 <div class="container">
-  <div class="table-responsive">
-<div class="container pt-5">
+  <div *ngIf="display" class="table-responsive">
     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
       <thead>
         <tr>
@@ -65,5 +64,4 @@
       </tbody>
     </table>
   </div>
-</div>
 </div>
